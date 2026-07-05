@@ -3,6 +3,7 @@ locale = 'zh-CN'
 defaultContentLanguage = 'zh-CN'
 title = "Alive的小窝"
 theme = 'reimu'
+disableKinds = ["RSS"]
 
 [languages]
   [languages.zh-CN]
