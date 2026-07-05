@@ -14,15 +14,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.163.3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +27,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: ${{ env.HUGO_VERSION }}
+          hugo-version: '0.163.3'
           extended: true
 
       - name: Setup Pages
@@ -44,8 +38,7 @@ jobs:
         env:
           HUGO_ENVIRONMENT: production
           TZ: Asia/Shanghai
-        run: |
-          hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+        run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
