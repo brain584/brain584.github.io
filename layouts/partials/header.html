@@ -180,7 +180,7 @@
       {{- else -}}
         {{- /* 视频背景 */ -}}
         <video autoplay muted loop playsinline
-               style="position: absolute; top: 0; left: 0; width: 100%; height: 180%; object-fit: cover; z-index: -1; mask: linear-gradient(to top, transparent, #fff 50%); -webkit-mask: linear-gradient(to top, transparent, #fff 50%);"
+               style="position: absolute; top: 0; left: 0; width: 100%; height: 180%; object-fit: cover; z-index: -1; mask: linear-gradient(to top, transparent 10%, #fff 70%); -webkit-mask: linear-gradient(to top, transparent 10%, #fff 70%);"
                poster="{{ .Site.Params.banner | relURL }}">
           <source src="{{ "images/bg.mp4" | relURL }}" type="video/mp4">
         </video>
