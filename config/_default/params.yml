@@ -193,7 +193,7 @@ algolia_search:
 preloader:
   enable: true
   text:
-    zh-CN: 少女祈祷中...
+    zh-CN: 加载中...
   rotate: true
 
 animation:
