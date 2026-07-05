@@ -121,7 +121,7 @@
     <picture></picture>
     <img style="visibility:hidden"></img>
   {{- else -}}
-    {{- if in .Site.Params.mainSections .Type -}}
+    {{- if or (in .Site.Params.mainSections .Type) .IsHome -}}
       {{- if and .Site.Params.cover (strings.HasPrefix .Site.Params.cover "rgb") -}}
         <picture></picture>
         <img style="position: absolute;top: 0;left: 0;width: 100%;height: 180%;z-index: -2;display: block;background: {{ .Site.Params.cover | safeCSS }};mask: linear-gradient(to top, transparent, #fff 50%);"></img>
