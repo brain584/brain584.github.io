@@ -150,18 +150,14 @@
         {{- if .Site.Params.banner_srcset.enable -}}
           <img alt="{{ .Title }}" style="visibility: hidden;">
         {{- else -}}
-          {{- /* 视频背景：首页使用视频替代静态 banner */ -}}
-          {{- if .IsHome -}}
+          {{- /* 视频背景：所有页面均使用视频替代静态 banner */ -}}
             <video autoplay muted loop playsinline
-                   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; mask: linear-gradient(to top, transparent, #fff 50%); -webkit-mask: linear-gradient(to top, transparent, #fff 50%);"
+                   style="position: absolute; top: 0; left: 0; width: 100%; height: 180%; object-fit: cover; z-index: -1; mask: linear-gradient(to top, transparent, #fff 50%); -webkit-mask: linear-gradient(to top, transparent, #fff 50%);"
                    poster="{{ .Site.Params.banner | relURL }}">
               <source src="{{ "images/bg.mp4" | relURL }}" type="video/mp4">
             </video>
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 40%, transparent 100%); z-index: -1; pointer-events: none;"></div>
             <img {{ if .Site.Params.material_theme.enable }}crossorigin="anonymous"{{ end }} fetchpriority="high" src="{{ .Site.Params.banner | relURL }}" alt="{{ .Title }}" style="visibility: hidden;">
-          {{- else -}}
-            <img {{ if .Site.Params.material_theme.enable }}crossorigin="anonymous"{{ end }} fetchpriority="high" src="{{ .Site.Params.banner | relURL }}" alt="{{ .Title }}">
-          {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- else -}}
@@ -183,7 +179,14 @@
       {{- if .Site.Params.banner_srcset.enable -}}
         <img alt="{{ .Title }}" style="visibility: hidden;">
       {{- else -}}
-        <img {{ if .Site.Params.material_theme.enable }}crossorigin="anonymous"{{ end }} fetchpriority="high" src="{{ .Site.Params.banner | relURL }}" alt="{{ .Title }}">
+        {{- /* 视频背景 */ -}}
+        <video autoplay muted loop playsinline
+               style="position: absolute; top: 0; left: 0; width: 100%; height: 180%; object-fit: cover; z-index: -1; mask: linear-gradient(to top, transparent, #fff 50%); -webkit-mask: linear-gradient(to top, transparent, #fff 50%);"
+               poster="{{ .Site.Params.banner | relURL }}">
+          <source src="{{ "images/bg.mp4" | relURL }}" type="video/mp4">
+        </video>
+        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 40%, transparent 100%); z-index: -1; pointer-events: none;"></div>
+        <img {{ if .Site.Params.material_theme.enable }}crossorigin="anonymous"{{ end }} fetchpriority="high" src="{{ .Site.Params.banner | relURL }}" alt="{{ .Title }}" style="visibility: hidden;">
       {{- end -}}
     {{- end -}}
   {{- end -}}
