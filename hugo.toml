@@ -1,7 +1,7 @@
 baseURL = 'https://brain584.github.io/'
 locale = 'zh-CN'
 defaultContentLanguage = 'zh-CN'
-title = 'My Blog'
+title = "Alive的小窝"
 theme = 'reimu'
 
 [languages]

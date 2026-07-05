@@ -1,0 +1,141 @@
+{{- $page := .page -}}
+{{- $index := .index -}}
+{{- $ctx := .ctx -}}
+
+<div class="post-wrapper">
+  <div
+    class="{{ if mod $index 2 }}
+      post-wrap right
+    {{ else }}
+      post-wrap left
+    {{ end }}"
+    data-aos="{{ $ctx.Site.Params.animation.options.home.post }}"
+  >
+    {{- if $page.Params.link -}}
+      <a
+        class="post-link"
+        href="{{ $page.Params.link }}"
+        itemprop="url"
+        target="_blank"
+        rel="noopener nofollow noreferrer"
+        aria-label="{{ $page.Title }}"
+        title="{{ $page.Title }}"
+      >
+      </a>
+    {{- else -}}
+      <a
+        class="post-link"
+        href="{{ $page.Permalink | relURL }}"
+        aria-label="{{ $page.Title }}"
+        title="{{ $page.Title }}"
+      >
+      </a>
+    {{- end -}}
+    {{- if and $page.Params.weight (or (eq $ctx.Site.Params.sort_order.home "default") (not $ctx.Site.Params.sort_order.home)) -}}
+      <div class="post-sticky">{{ i18n "sticky" }}</div>
+    {{- end -}}
+    <div
+      class="{{ if mod $index 2 }}
+        post-cover right
+      {{ else }}
+        post-cover left
+      {{ end }}"
+    >
+      {{- /* 封面逻辑：front-matter cover > 文章第一张图 > 随机封面 > banner */ -}}
+      {{- $coverSrc := "" -}}
+      {{- $hasCustomCover := false -}}
+
+      {{- /* 1. 优先使用 front-matter 中的 cover */ -}}
+      {{- if and $page.Params.cover (not (hasPrefix $page.Params.cover "rgb")) -}}
+        {{- $coverSrc = $page.Params.cover | relURL -}}
+        {{- $hasCustomCover = true -}}
+      {{- end -}}
+
+      {{- /* 2. 没有自定义 cover，尝试提取文章第一张图片 */ -}}
+      {{- if not $hasCustomCover -}}
+        {{- $content := $page.RawContent -}}
+        {{- /* Markdown 图片: ![alt](url) */ -}}
+        {{- $mdImages := findRE `!\[.*?\]\((.*?)\)` $content 1 -}}
+        {{- /* HTML 图片: <img src="url" */ -}}
+        {{- $htmlImages := findRE `<img[^>]*src="([^"]*)"[^>]*>` $content 1 -}}
+        {{- $firstImg := "" -}}
+        {{- if $mdImages -}}
+          {{- $firstImg = index (findRE `\((.*?)\)` (index $mdImages 0) 1) 0 -}}
+          {{- $firstImg = replaceRE `[\(\)]` "" $firstImg -}}
+        {{- else if $htmlImages -}}
+          {{- $firstImg = replaceRE `<img[^>]*src="([^"]*)"[^>]*>` "$1" (index $htmlImages 0) -}}
+        {{- end -}}
+        {{- if $firstImg -}}
+          {{- /* 排除外部链接，只处理本地图片 */ -}}
+          {{- if not (or (hasPrefix $firstImg "http://") (hasPrefix $firstImg "https://") (hasPrefix $firstImg "data:")) -}}
+            {{- $coverSrc = $firstImg | relURL -}}
+          {{- else -}}
+            {{- $coverSrc = $firstImg -}}
+          {{- end -}}
+          {{- $hasCustomCover = true -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* 渲染封面图 */ -}}
+      {{- if $hasCustomCover -}}
+        <img
+          data-src="{{ $coverSrc }}"
+          data-sizes="auto"
+          alt="{{ $page.Title }}"
+          class="lazyload"
+        />
+      {{- else -}}
+        {{- /* 3. 随机封面 */ -}}
+        {{- $cover := partial "helpers/randomCover.html" $ctx -}}
+        {{- if $cover -}}
+          <img
+            data-src="{{ $cover | relURL }}"
+            data-sizes="auto"
+            alt="{{ $page.Title }}"
+            class="lazyload"
+          />
+        {{- else -}}
+          {{- /* 4. 兜底：banner 图 */ -}}
+          <img
+            data-src="{{ $ctx.Site.Params.banner | relURL }}"
+            data-sizes="auto"
+            alt="{{ $page.Title }}"
+            class="lazyload"
+          />
+        {{- end -}}
+      {{- end -}}
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span
+          ><span class="icon-calendar"></span
+          >{{ $page.Date.Format $ctx.Site.Params.dateFormat }}</span
+        >
+        {{- if $ctx.Site.Params.show_update_time -}}
+          <span
+            ><span class="icon-calendar-plus"></span
+            >{{ $page.Lastmod.Format $ctx.Site.Params.dateFormat }}</span
+          >
+        {{- end -}}
+        <span
+          ><span class="icon-pencil"></span
+          >{{ i18n "post.count" $page.WordCount }}</span
+        >
+        <span
+          ><span class="icon-clock"></span
+          >{{ i18n "post.time" $page.ReadingTime }}</span
+        >
+      </div>
+      <h2 class="post-title">{{ $page.Title }}</h2>
+      <article class="post-article">
+        {{- if $page.Params.description -}}
+          {{- $page.Params.description | plainify | truncate 300 -}}
+        {{- else if $page.Summary -}}
+          {{- $page.Summary  | plainify | truncate 300 -}}
+        {{- else -}}
+          {{- $page.RawContent | truncate 300 -}}
+        {{- end -}}
+      </article>
+    </div>
+  </div>
+</div>
