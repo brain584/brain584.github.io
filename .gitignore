@@ -1,0 +1,15 @@
+# Hugo build output
+/public/
+
+# Hugo generated resources
+/resources/
+
+# Hugo temp
+.hugo_build.lock
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
